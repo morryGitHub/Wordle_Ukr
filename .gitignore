@@ -1,4 +1,4 @@
 build/
 .env
-Wordle_Ukr.spec
+main.spec
 words.txt
