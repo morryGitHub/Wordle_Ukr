@@ -1,16 +1,13 @@
 import random
 import enchant
-import os
 
-from dotenv import load_dotenv
 from tkinter import messagebox
 from tkinter import *
 from collections import Counter
 
-load_dotenv()
 
 d_ua = enchant.Dict("uk_UA")  # укр
-dic_path = os.getenv("dic_path")
+dic_path = r'words.txt'
 
 GUESSED_WORD = ''
 UPPER_LETTERS = ['Й', 'Ц', 'У', 'К', 'Е', 'Н', 'Г', 'Ш', 'Щ', 'З', 'Х', 'Ї']
