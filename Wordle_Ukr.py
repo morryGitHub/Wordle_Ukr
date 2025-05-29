@@ -1,4 +1,6 @@
-
+# todo доробити словник
+# todo maybe create a db for saving user's results
+# todo select language before game
 # that's all -> new project
 import os
 import random
