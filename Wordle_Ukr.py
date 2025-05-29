@@ -47,10 +47,13 @@ def reset_game():
 
 
 def handle_win():
-    messagebox.showinfo(
+    restart = messagebox.askyesno(
         "Вітаємо!",
-        f"Ви вгадали слово: {GUESSED_WORD}!\nКількість спроб: {len(used_words)}"
+        f"Ви вгадали слово: {GUESSED_WORD}!\nКількість спроб: {len(used_words)}\n\nБажаєте зіграти ще раз?"
     )
+
+    if restart:
+        reset_game()
 
 
 def delete_word():
@@ -129,6 +132,7 @@ def confirm_word():
 
         if current_word == GUESSED_WORD:
             handle_win()
+            root.destroy()
             return
 
         current_word = ''

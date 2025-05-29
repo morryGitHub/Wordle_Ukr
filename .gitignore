@@ -1,4 +1,5 @@
 build/
-main.spec
+Wordle_Ukr.spec
 words.txt
 paths.py
+icon
