@@ -1,5 +1,5 @@
 build/
 Wordle_Ukr.spec
-words.txt
+dicts/words_ua.txt
 paths.py
 icon

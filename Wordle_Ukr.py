@@ -1,3 +1,6 @@
+
+# that's all -> new project
+import os
 import random
 import enchant
 
@@ -5,16 +8,20 @@ from tkinter import messagebox
 from tkinter import *
 from collections import Counter
 from paths import resource_path
+from keybords import UPPER_LETTERS_UA, MIDDLE_LETTERS_UA, LOWER_LETTERS_UA
+from keybords import UPPER_LETTERS_EN, MIDDLE_LETTERS_EN, LOWER_LETTERS_EN
 
 d_ua = enchant.Dict("uk_UA")  # укр
-dic_path = resource_path("words.txt")
-print(dic_path)
+d_en = enchant.Dict("en_US")  # eng
+
+LANGUAGE = None
+dic_path = None
+languages = {
+    "English": r"words_en.txt",
+    "Ukrainian": r"words_ua.txt"
+}
 
 GUESSED_WORD = ''
-UPPER_LETTERS = ['Й', 'Ц', 'У', 'К', 'Е', 'Н', 'Г', 'Ш', 'Щ', 'З', 'Х', 'Ї']
-MIDDLE_LETTERS = ['Ф', 'І', 'В', 'А', 'П', 'Р', 'О', 'Л', 'Д', 'Ж', 'Є']
-LOWER_LETTERS = ["'", 'Я', 'Ч', 'С', 'М', 'И', 'Т', 'Ь', 'Б', 'Ю', 'Ґ']
-
 max_letters = 5
 letter_click = 0
 current_word = ''
@@ -27,6 +34,33 @@ buttons_lower = {}
 used_words = {}
 
 COUNTS = {}
+
+
+def select_language():
+    def confirm_selection(language):
+        global LANGUAGE, dic_path
+        if language:
+            LANGUAGE = language
+            dic_path = resource_path(os.path.join("dicts", languages[language]))
+
+            question.destroy()
+            choose_word()
+            createGUI()
+
+    question = Tk()
+    question.title("Select Language")
+    question.geometry("300x150+880+300")
+
+    Label(question, text="Choose a language:", font=('Ariel', 16, 'bold')).pack(pady=10)
+    frame = Frame(question)
+
+    for lang in languages:
+        (Button(frame, text=lang, font=('Ariel', 14), relief='solid', command=lambda l=lang: confirm_selection(l)).pack(
+            side=LEFT, pady=5,
+            padx=10))
+    frame.pack(side=TOP)
+
+    question.mainloop()
 
 
 def reset_game():
@@ -48,8 +82,8 @@ def reset_game():
 
 def handle_win():
     restart = messagebox.askyesno(
-        "Вітаємо!",
-        f"Ви вгадали слово: {GUESSED_WORD}!\nКількість спроб: {len(used_words)}\n\nБажаєте зіграти ще раз?"
+        "Congratulations!",
+        f"You guessed the word: {GUESSED_WORD}!\nNumber of attempts: {len(used_words)}\n\nWould you like to play again?"
     )
 
     if restart:
@@ -65,7 +99,7 @@ def delete_word():
 
 
 def update_colors():
-    darkKhaki = '#d1c400'  # DarkKhaki — тёмно-жёлтый оттенок
+    darkKhaki = '#d1c400'  # DarkKhaki — dark-yellow
     # Сначала зелёные — правильные буквы на правильных местах
     for index in range(len(GUESSED_WORD)):
         if current_word[index] == GUESSED_WORD[index]:
@@ -112,12 +146,12 @@ def confirm_word():
     is_valid = d_ua.check(current_word)
 
     if not is_valid:
-        messagebox.showwarning("Помилка", f"Слово '{current_word}' недійсне.")
+        messagebox.showwarning("Error", f"The word '{current_word}' is invalid.")
         delete_word()
         return
 
     if current_word in used_words:
-        messagebox.showwarning("Увага", "Це слово вже було використано. Спробуйте інше.")
+        messagebox.showwarning("Warning", "This word has already been used. Try another one.")
         delete_word()
         return
 
@@ -140,8 +174,8 @@ def confirm_word():
         if word_click >= 6:
 
             restart = messagebox.askyesno(
-                "Гру завершено",
-                f"Ви не вгадали слово.\nПравильне слово: {GUESSED_WORD}\n\nБажаєте зіграти ще раз?"
+                "Game Over",
+                f"You did not guess the word.\nThe correct word was: {GUESSED_WORD}\n\nWould you like to play again?"
             )
 
             if restart:
@@ -168,11 +202,13 @@ def click_on_btn(letter):
 
 def choose_word():
     global GUESSED_WORD, COUNTS
+    if dic_path is None:
+        return
+    else:
+        with open(dic_path, mode='r', encoding='utf-8') as file:  # type: ignore
+            words = [word.split('/')[0].strip() for word in file if len(word.split('/')[0].strip()) == max_letters]
 
-    with open(dic_path, mode='r', encoding='UTF-8') as file:
-        words = [word.split('/')[0].strip() for word in file if len(word.split('/')[0].strip()) == max_letters]
-
-    GUESSED_WORD = random.choice(words).upper()
+        GUESSED_WORD = random.choice(words).upper()
 
 
 def createGUI():
@@ -201,7 +237,12 @@ def createGUI():
     middle_keyboard = Frame(root)
     lower_keyboard = Frame(root)
 
-    for letter in UPPER_LETTERS:
+    if LANGUAGE == next(iter(languages)):  # eng_keyboard
+        first_line, second_line, third_line = UPPER_LETTERS_EN, MIDDLE_LETTERS_EN, LOWER_LETTERS_EN
+    else:
+        first_line, second_line, third_line = UPPER_LETTERS_UA, MIDDLE_LETTERS_UA, LOWER_LETTERS_UA
+
+    for letter in first_line:
         btn = Button(upper_keyboard, text=f'{letter}', font=('Courier', 16, 'bold'),
                      command=lambda l=letter: click_on_btn(l))
         btn.pack(side=LEFT, padx=5)
@@ -209,7 +250,7 @@ def createGUI():
 
     upper_keyboard.pack(side=TOP, pady=10)
 
-    for letter in MIDDLE_LETTERS:
+    for letter in second_line:
         btn = Button(middle_keyboard, text=f'{letter}', font=('Courier', 16, 'bold'),
                      command=lambda l=letter: click_on_btn(l))
         btn.pack(side=LEFT, padx=5)
@@ -219,7 +260,7 @@ def createGUI():
     delete_button.pack(side=LEFT, padx=5)
     middle_keyboard.pack(side=TOP, pady=10)
 
-    for letter in LOWER_LETTERS:
+    for letter in third_line:
         btn = Button(lower_keyboard, text=f'{letter}', font=('Courier', 16, 'bold'),
                      command=lambda l=letter: click_on_btn(l))
         btn.pack(side=LEFT, padx=5)
@@ -232,5 +273,4 @@ def createGUI():
     root.mainloop()
 
 
-choose_word()
-createGUI()
+select_language()
