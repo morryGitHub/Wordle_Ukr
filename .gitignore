@@ -1,3 +1,4 @@
 build/
 main.spec
 words.txt
+paths.py

@@ -94,7 +94,7 @@ pip install pyinstaller
    Run the build command:
 
 ```bash
-pyinstaller --onefile --noconsole main.py
+pyinstaller --onefile --noconsole Wordle_Ukr.py
 ```
 
 5. 📁 Після успішної збірки `.exe` файл з’явиться у папці `dist/`.   
