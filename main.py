@@ -1,12 +1,16 @@
 import random
 import enchant
+import os
 
+from dotenv import load_dotenv
 from tkinter import messagebox
 from tkinter import *
 from collections import Counter
 
+load_dotenv()
+
 d_ua = enchant.Dict("uk_UA")  # укр
-dic_path = r"C:\PyCharm\MyProjects\Wordle\words.txt"
+dic_path = os.getenv("dic_path")
 
 GUESSED_WORD = ''
 UPPER_LETTERS = ['Й', 'Ц', 'У', 'К', 'Е', 'Н', 'Г', 'Ш', 'Щ', 'З', 'Х', 'Ї']
@@ -99,7 +103,6 @@ def update_colors():
 
 
 def confirm_word():
-    print(GUESSED_WORD)
     global word_click, current_word, letter_click, root, COUNTS
 
     if not current_word:
@@ -155,8 +158,6 @@ def delete_letter():
 
 def click_on_btn(letter):
     global word_click, letter_click, current_word
-    print(word_click)
-    print(letter_click)
     if (0 <= letter_click < max_letters) and (0 <= word_click < 6):
         labels[word_click][letter_click].config(text=letter)
         letter_click += 1
@@ -168,10 +169,8 @@ def choose_word():
 
     with open(dic_path, mode='r', encoding='UTF-8') as file:
         words = [word.split('/')[0].strip() for word in file if len(word.split('/')[0].strip()) == max_letters]
-    print(words)
 
     GUESSED_WORD = random.choice(words).upper()
-
 
 def createGUI():
     global frames, labels, root, confirm_button, delete_button

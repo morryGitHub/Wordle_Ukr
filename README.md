@@ -30,3 +30,41 @@
 > ⚠️ Windows може показати попередження. Натисніть “Додатково” → “Все одно виконати”.  
 > ⚠️ Windows might show a warning. Click “More info” → “Run anyway”.
 
+Ось оновлений блок `README.md` з поясненням, як адаптувати гру **Wordle\_Ukr** під англійську версію. Він оформлений у стилі решти файлу:
+
+---
+
+### 🌐 Як адаптувати гру під англійську | How to adapt the game for English
+
+Гру легко змінити під англомовну версію.
+You can easily modify the game to support English.
+
+#### 🔄 Що потрібно зробити | What you need to do:
+
+📄 Додайте англійський словник (текстовий файл)        
+Add an English word list (plain `.txt` file) with 5-letter words.
+
+
+🧠 У коді замініть наступні змінні:  
+   In `main.py`, replace the following lines:
+
+```python
+# Було / Original (Ukrainian):
+d_ua = enchant.Dict("uk_UA")  # укр
+dic_path = r"C:\Wordle_Ukr\words.txt"
+```
+
+```python
+# Стало / New (English):
+d_en = enchant.Dict("en_US")  # англ
+dic_path = r"C:\Wordle_Ukr\words_en.txt"
+```
+
+🔁 Запустіть гру з новими налаштуваннями  
+   Run the game with the new configuration.
+
+> 💡 Файл `words_en.txt` повинен містити **одне слово з 5 літер на рядок**.
+> 💡 The file `words_en.txt` must contain **one 5-letter word per line**.
+
+---
+
