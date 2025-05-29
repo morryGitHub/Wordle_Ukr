@@ -1,3 +1,4 @@
-game.spec
 build/
 .env
+Wordle_Ukr.spec
+words.txt
